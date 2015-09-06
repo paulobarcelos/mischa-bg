@@ -1,0 +1,169 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+		<title>mischa-bg Demo</title>
+		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+		<link rel="import" href="../mischa-bg.html">
+
+		<style>
+			#bg1 {
+				display: inline-block; /* block by default */
+				width: 200px;
+				height: 300px;
+			}
+
+			.container{
+				width: 500px;
+				height: 300px;
+				position: relative;
+			}
+			.container > * {
+				position: relative;
+			}
+			#bg2 {
+				position: absolute;
+				top:0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+			}
+
+			#bg3 {
+				width: 100%;
+				height: 700px;
+			}
+
+			.palette div{
+				display: inline-block;
+				margin: 0;
+				width: 40px;
+				height: 40px;
+			}
+		</style>
+	</head>
+	<body>
+
+		<h1>Color palettes</h1>
+		<p>Just for reference, these are the palettes used:</p>
+		<h3>Palette 1</h3>
+		<div class="palette">
+			<div style="background-color:#40A1A1"></div>
+			<div style="background-color:#C1D94C"></div>
+			<div style="background-color:#FFFFFC"></div>
+			<div style="background-color:#363636"></div>
+			<div style="background-color:#EC1D8F"></div>
+		</div>
+
+		<h3>Palette 2</h3>
+		<div class="palette">
+			<div style="background-color:#594F4F"></div>
+			<div style="background-color:#547980"></div>
+			<div style="background-color:#9DE0AD"></div>
+			<div style="background-color:#E5FCC2"></div>
+		</div>
+
+		<h3>Palette 3</h3>
+		<div class="palette">
+			<div style="background-color:#FF4E50"></div>
+			<div style="background-color:#FC913A"></div>
+			<div style="background-color:#F9D423"></div>
+			<div style="background-color:#EDE574"></div>
+			<div style="background-color:#E1F5C4"></div>
+		</div>
+
+		<hr/>
+
+		<h1>Inline block</h1>
+		<button id="button1-1">palette 1</button>
+		<button id="button1-2">palette 2</button>
+		<button id="button1-3">palette 3</button>
+		<div>
+			<mischa-bg id="bg1">
+			</mischa-bg>
+			<span>In can inline it as an image.</span>
+		</div>
+
+		<hr/>
+
+		<h1>Fit the containter</h1>
+		<button id="button2-1">palette 1</button>
+		<button id="button2-2">palette 2</button>
+		<button id="button2-3">palette 3</button>
+		<div class="container">
+			<mischa-bg id="bg2" no-animation>
+			</mischa-bg>
+			<h1>Hello!</h1>
+			<div>Notice that the background is not animated. That's because the <code>no-animation</code> attribute is set.</div>
+		</div>
+
+		<hr/>
+
+		<h1>Go big!</h1>
+		<button id="button3-1">palette 1</button>
+		<button id="button3-2">palette 2</button>
+		<button id="button3-3">palette 3</button>
+		<mischa-bg id="bg3">
+		</mischa-bg>
+
+		<hr/>
+
+
+
+		<script>
+			var palette1 = [ '#40A1A1', '#C1D94C', '#FFFFFC', '#363636', '#EC1D8F' ];
+			var palette2 = [ '#594F4F', '#547980', '#9DE0AD', '#E5FCC2' ];
+			var palette3 = [ '#FF4E50', '#FC913A', '#F9D423', '#EDE574', '#E1F5C4' ];
+
+			// Initial colors
+			window.addEventListener('WebComponentsReady', function(e) {
+				document.querySelector('#bg1').palette = palette1;
+				document.querySelector('#bg2').palette = palette1;
+				document.querySelector('#bg3').palette = palette1;
+			});
+
+			// Change colors on button click
+			document.querySelector('#button1-1').addEventListener('click', function() {
+				document.querySelector('#bg1').palette = palette1;
+			});
+			document.querySelector('#button1-2').addEventListener('click', function() {
+				document.querySelector('#bg1').palette = palette2;
+			});
+			document.querySelector('#button1-3').addEventListener('click', function() {
+				document.querySelector('#bg1').palette = palette3;
+			});
+
+			document.querySelector('#button2-1').addEventListener('click', function() {
+				document.querySelector('#bg2').palette = palette1;
+			});
+			document.querySelector('#button2-2').addEventListener('click', function() {
+				document.querySelector('#bg2').palette = palette2;
+			});
+			document.querySelector('#button2-3').addEventListener('click', function() {
+				document.querySelector('#bg2').palette = palette3;
+			});
+
+			document.querySelector('#button3-1').addEventListener('click', function() {
+				document.querySelector('#bg3').palette = palette1;
+			});
+			document.querySelector('#button3-2').addEventListener('click', function() {
+				document.querySelector('#bg3').palette = palette2;
+			});
+			document.querySelector('#button3-3').addEventListener('click', function() {
+				document.querySelector('#bg3').palette = palette3;
+			});
+
+		</script>
+
+	</body>
+</html>

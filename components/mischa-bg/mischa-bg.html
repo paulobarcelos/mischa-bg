@@ -1,0 +1,275 @@
+<link rel="import" href="../polymer/polymer.html">
+<script src="StackBlur.js"></script>
+
+<!--
+An element that, given a color palette, renders a rectangle that slowly animates animates between blurred color compositions.
+
+Example:
+
+    <head>
+        <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+        <link rel="import" href="bower_components/mischa-bg/mischa-bg.html">
+        <style>
+            mischa-bg {
+                width: 100px;
+                height: 100px;
+            }
+        </style>
+    </head>
+    <body>
+        <mischa-bg palette='["red","green","blue","yellow"]'></mischa-bg>
+    </body>
+@group Micha
+@element mischa-bg
+@demo demo/index.html
+-->
+
+<dom-module id="mischa-bg">
+	<template>
+		<style>
+			:host {
+				display: block;
+				box-sizing: border-box;
+				overflow: hidden;
+				position: relative;
+			}
+			#ping,
+			#pong{
+				position: absolute;
+				top:0;
+				left:0;
+				bottom: 0;
+				right: 0;
+			}
+			#pong{
+				opacity: 0;
+				-webkit-transition: opacity 5s;
+				-moz-transition: opacity 5s;
+				-ms-transition: opacity 5s;
+				-o-transition: opacity 5s;
+				transition: opacity 5s;
+			}
+			:host([_flag]) #pong{
+				opacity: 1;
+			}
+			canvas{
+				position: absolute;
+				top:0;
+				left:0;
+				width: 100%;
+				height: 100%;
+
+				-webkit-animation-name: fade;
+				-moz-animation-name: fade;
+				-ms-animation-name: fade;
+				-o-animation-name: fade;
+				animation-name: fade;
+
+				-webkit-animation-iteration-count: infinite;
+				-moz-animation-iteration-count: infinite;
+				-ms-animation-iteration-count: infinite;
+				-o-animation-iteration-count: infinite;
+				animation-iteration-count: infinite;
+
+				-webkit-animation-timing-function: linear;
+				-moz-animation-timing-function: linear;
+				-ms-animation-timing-function: linear;
+				-o-animation-timing-function: linear;
+				animation-timing-function: linear;
+			}
+			#debug{
+				-webkit-animation-name: none;
+				-moz-animation-name: none;
+				-ms-animation-name: none;
+				-o-animation-name: none;
+				animation-name: none;
+				top:0;
+				left:0;
+				width: 100px;
+				height: 20px;
+			}
+			:host([no-animation]) canvas{
+				-webkit-animation-name: none;
+				-moz-animation-name: none;
+				-ms-animation-name: none;
+				-o-animation-name: none;
+				animation-name: none;
+			}
+
+			#canvas1A,
+			#canvas2A{
+				-webkit-animation-name: none;
+				-moz-animation-name: none;
+				-ms-animation-name: none;
+				-o-animation-name: none;
+				animation-name: none;
+			}
+			#canvas1B,
+			#canvas2B {
+				-webkit-animation-duration: 12s;
+				-moz-animation-duration: 12s;
+				-ms-animation-duration: 12s;
+				-o-animation-duration: 12s;
+				animation-duration: 12s;
+			}
+			#canvas1C,
+			#canvas2C {
+				-webkit-animation-duration: 27s;
+				-moz-animation-duration: 27s;
+				-ms-animation-duration: 27s;
+				-o-animation-duration: 27s;
+				animation-duration: 27s;
+			}
+			@-webkit-keyframes fade {
+				0% { opacity: 0; }
+				50% { opacity: 1; }
+				100% { opacity: 0; }
+			}
+			@-moz-keyframes fade {
+				0% { opacity: 0; }
+				50% { opacity: 1; }
+				100% { opacity: 0; }
+			}
+			@-ms-keyframes fade {
+				0% { opacity: 0; }
+				50% { opacity: 1; }
+				100% { opacity: 0; }
+			}
+			@-o-keyframes fade {
+				0% { opacity: 0; }
+				50% { opacity: 1; }
+				100% { opacity: 0; }
+			}
+			@keyframes fade {
+				0% { opacity: 0; }
+				50% { opacity: 1; }
+				100% { opacity: 0; }
+			}
+		</style>
+		<div id="ping">
+			<canvas id="canvas1A"></canvas>
+			<canvas id="canvas1B"></canvas>
+			<canvas id="canvas1C"></canvas>
+		</div>
+		<div id="pong">
+			<canvas id="canvas2A"></canvas>
+			<canvas id="canvas2B"></canvas>
+			<canvas id="canvas2C"></canvas>
+		</div>
+		<canvas id="debug" hidden$="[[!debug]]"></canvas>
+
+	</template>
+</dom-module>
+
+<script>
+(function(){
+	Polymer({
+		is: 'mischa-bg',
+		properties: {
+			/**
+			* The css colors used to build the backround.
+			*
+			* @type string[]
+			*/
+			palette: {
+				type: Array,
+				value: [],
+				observer: '_paletteChanged'
+			},
+			/**
+			* Disables animation of the background. Set to true for better performance.
+			*
+			* @type Boolean
+			*/
+			noAnimation: {
+				type: Boolean,
+				reflectToAttribute: true,
+				value: false
+			},
+			/**
+			* Displays the current color palette
+			*
+			* @type Boolean
+			*/
+			debug: {
+				type: Boolean,
+				reflectToAttribute: true,
+				value: false
+			},
+			_flag: {
+				type: Boolean,
+				reflectToAttribute: true,
+				value: false
+			}
+		},
+		ready: function() {
+		},
+		setPalette: function(palette){
+			this.palette = palette;
+			this._paletteChanged(palette);
+		},
+		_paletteChanged: function(palette){
+			if(!palette.length){
+				return;
+			}
+			this._flag = !this._flag;
+			var ping = [
+				this.$.canvas1A,
+				this.$.canvas1B,
+				this.$.canvas1C
+			];
+			var pong = [
+				this.$.canvas2A,
+				this.$.canvas2B,
+				this.$.canvas2C
+			];
+			var canvases = this._flag ? pong : ping;
+
+			if(!this.firstRun){
+				ping.forEach(function (canvas) {
+					this._paintCanvas(canvas, palette);
+				}.bind(this));
+				pong.forEach(function (canvas) {
+					this._paintCanvas(canvas, palette);
+				}.bind(this));
+				this.firstRun = true;
+			}
+			else{
+				canvases.forEach(function (canvas) {
+					this._paintCanvas(canvas, palette);
+				}.bind(this));
+			}
+			this._paintDebug(this.$.debug, palette);
+		},
+		_paintDebug: function (canvas, palette) {
+			if(!palette.length){
+				return;
+			}
+			var ctx = canvas.getContext('2d');
+			var w = canvas.width;
+			var h = canvas.height;
+			var gap = w / palette.length;
+			for (var i = 0; i < palette.length; i++) {
+				ctx.fillStyle = palette[i];
+				ctx.fillRect(i*gap, 0, gap, h);
+			}
+		},
+		_paintCanvas: function (canvas, palette) {
+			if(!palette.length){
+				return;
+			}
+			var ctx = canvas.getContext('2d');
+			var w = canvas.width;
+			var h = canvas.height;
+			ctx.fillStyle = palette[0];
+			ctx.fillRect(0,0,w,h);
+			for (var i = 0; i < 50; i++) {
+				var random = Math.floor(Math.random() * palette.length);
+				ctx.fillStyle = palette[random];
+				ctx.fillRect(Math.random() * w - w * 0.25, Math.random() * h - h * 0.25,Math.random() * w,Math.random() * h);
+			}
+			STACK_BLUR.blur(canvas, 75);
+		}
+	});
+})();
+</script>

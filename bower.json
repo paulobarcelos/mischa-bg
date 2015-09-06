@@ -1,0 +1,30 @@
+{
+  "name": "mischa-bg",
+  "version": "0.0.5",
+  "authors": [
+    "Paulo Barcelos <paulo@azucrina.org>"
+  ],
+  "description": "An element that, given a color palette, renders a rectangle that slowly animates animates between blurred color compositions.",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "mischa billing",
+    "blur",
+    "colors"
+  ],
+  "main": "mischa-bg.html",
+  "homepage": "https://github.com/paulobarcelos/mischa-bg/",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*"
+  }
+}
