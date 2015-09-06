@@ -126,9 +126,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			var palette3 = [ '#FF4E50', '#FC913A', '#F9D423', '#EDE574', '#E1F5C4' ];
 
 			// Initial colors
-			document.querySelector('#bg1').palette = palette1;
-			document.querySelector('#bg2').palette = palette1;
-			document.querySelector('#bg3').palette = palette1;
+			window.addEventListener('WebComponentsReady', function(e) {
+				document.querySelector('#bg1').palette = palette1;
+				document.querySelector('#bg2').palette = palette1;
+				document.querySelector('#bg3').palette = palette1;
+			});
 
 			// Change colors on button click
 			document.querySelector('#button1-1').addEventListener('click', function() {

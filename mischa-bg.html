@@ -182,12 +182,15 @@ Example:
 		},
 		ready: function() {
 		},
+		setPalette: function(palette){
+			this.palette = palette;
+			this._paletteChanged(palette);
+		},
 		_paletteChanged: function(palette){
 			if(!palette.length){
 				return;
 			}
 			this._flag = !this._flag;
-			console.log(this._flag , palette)
 			var ping = [
 				this.$.canvas1A,
 				this.$.canvas1B,
