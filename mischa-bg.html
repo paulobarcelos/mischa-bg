@@ -43,11 +43,11 @@ Example:
 			}
 			#pong{
 				opacity: 0;
-				-webkit-transition: opacity 3s;
-				-moz-transition: opacity 3s;
-				-ms-transition: opacity 3s;
-				-o-transition: opacity 3s;
-				transition: opacity 3s;
+				-webkit-transition: opacity 5s;
+				-moz-transition: opacity 5s;
+				-ms-transition: opacity 5s;
+				-o-transition: opacity 5s;
+				transition: opacity 5s;
 			}
 			:host([_flag]) #pong{
 				opacity: 1;
@@ -76,6 +76,17 @@ Example:
 				-ms-animation-timing-function: linear;
 				-o-animation-timing-function: linear;
 				animation-timing-function: linear;
+			}
+			#debug{
+				-webkit-animation-name: none;
+				-moz-animation-name: none;
+				-ms-animation-name: none;
+				-o-animation-name: none;
+				animation-name: none;
+				top:0;
+				left:0;
+				width: 100px;
+				height: 20px;
 			}
 			:host([no-animation]) canvas{
 				-webkit-animation-name: none;
@@ -145,6 +156,7 @@ Example:
 			<canvas id="canvas2B"></canvas>
 			<canvas id="canvas2C"></canvas>
 		</div>
+		<canvas id="debug" hidden$="[[!debug]]"></canvas>
 
 	</template>
 </dom-module>
@@ -167,9 +179,19 @@ Example:
 			/**
 			* Disables animation of the background. Set to true for better performance.
 			*
-			* @type string[]
+			* @type Boolean
 			*/
 			noAnimation: {
+				type: Boolean,
+				reflectToAttribute: true,
+				value: false
+			},
+			/**
+			* Displays the current color palette
+			*
+			* @type Boolean
+			*/
+			debug: {
 				type: Boolean,
 				reflectToAttribute: true,
 				value: false
@@ -217,6 +239,20 @@ Example:
 					this._paintCanvas(canvas, palette);
 				}.bind(this));
 			}
+			this._paintDebug(this.$.debug, palette);
+		},
+		_paintDebug: function (canvas, palette) {
+			if(!palette.length){
+				return;
+			}
+			var ctx = canvas.getContext('2d');
+			var w = canvas.width;
+			var h = canvas.height;
+			var gap = w / palette.length;
+			for (var i = 0; i < palette.length; i++) {
+				ctx.fillStyle = palette[i];
+				ctx.fillRect(i*gap, 0, gap, h);
+			}
 		},
 		_paintCanvas: function (canvas, palette) {
 			if(!palette.length){
@@ -232,7 +268,7 @@ Example:
 				ctx.fillStyle = palette[random];
 				ctx.fillRect(Math.random() * w - w * 0.25, Math.random() * h - h * 0.25,Math.random() * w,Math.random() * h);
 			}
-			STACK_BLUR.blur(canvas, 100);
+			STACK_BLUR.blur(canvas, 75);
 		}
 	});
 })();
